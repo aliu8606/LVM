@@ -1,0 +1,104 @@
+//Superclass Volume
+String name: name of volume
+int size: size of volume in G
+UUID uuid: the UUID of the volume
+
+Constructor: initializes all three variables.
+initializes the uuid with the generator method.
+
+getter methods for all three variables
+
+setter method for size
+
+UUID generateUUID: generates a uuid and returns it
+
+
+
+//Class Drive
+String name: name of the hard drive
+String size = size of the hard drive
+
+getter methods for both variables
+
+String toString: returns the name and size of the drive
+
+
+
+//Subclass PV
+Drive drive: associated hard drive of the physical volume
+VG vg: associated volume group of the physical volume
+
+Constructor : calls checkDrive to make sure the drive can be used
+if not, stop and report an error
+initializes the drive if appropriate, uses the super
+constructor to initialize the name, size from the drive, and uuid
+sets vg to null, initially
+
+getter methods for both variables
+
+setter method for vg
+
+boolean checkDrive: checks to make sure the drive exists
+and does not belong to another PV
+returns true if it exists and have not committed yet, false otherwise
+
+String toString: returns the PV, with size, vg if it exists, and uuid
+sort by volume group
+
+
+
+//Subclass VG
+ArrayList<PV> pVList: list of physical volumes the volume group has
+ArrayList<LV> lVList: list of logical volumes the volume group has
+int freeSpace: the total free space it has (total PV - total LV)
+
+Constructor: calls checkPV to make sure the PV can be added
+if not, stop and report an error
+adds PV to pVList if appropriate, and uses super
+constructor to initialize the name, size from PV, and uuid
+initializes freeSpace to PV size
+sets lVList to an empty list
+
+getter methods for all three variables
+
+void extend: takes in new PV and calls checkPV to check if PV can be added
+if not, stop and report an error
+adds PV to pVList if appropriate
+updates freeSpace
+
+void addLV: takes in new LV and adds it to lVList
+updates freeSpace
+
+boolean checkPV: checks if inputted PV exists
+and does not belong to another VG
+returns true if it exists and have not committed yet, false otherwise
+
+String toString: returns VG,
+with size and freeSpace, list of PVs and uuid
+
+
+
+//Subclass LV
+VG vg: associated volume group of the logical volume
+
+Constructor: calls checkVG to see if VG exists
+if not, stop and report an error
+uses super constructor to initialize name, size, uuid
+calls addLV to add LV to the VG
+initializes vg
+
+getter method for vg (?)
+
+boolean checkVG: checks if inputted VG exists
+and if its freeSpace >= LV size
+returns true if it does, false otherwise
+
+String toString: returns LV
+with size, associated VG, and uuid
+sorted by VG
+
+//class notRunner
+ArrayList<Drive> drives: list of drives created
+ArrayList<PV> pvs: list of pvs created
+ArrayList<VG> vgs: list of vgs created
+
