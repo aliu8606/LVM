@@ -3,7 +3,8 @@ String name: name of volume
 int size: size of volume in G
 UUID uuid: the UUID of the volume
 
-Constructor: initializes all three variables.
+Constructor: parameters String name, int size
+initializes all three variables.
 initializes the uuid with the generator method.
 
 getter methods for all three variables
@@ -16,7 +17,10 @@ UUID generateUUID: generates a uuid and returns it
 
 //Class Drive
 String name: name of the hard drive
-String size = size of the hard drive
+int size = size of the hard drive
+
+Constructor: parameters String name, int size
+initializes both variables
 
 getter methods for both variables
 
@@ -28,9 +32,8 @@ String toString: returns the name and size of the drive
 Drive drive: associated hard drive of the physical volume
 VG vg: associated volume group of the physical volume
 
-Constructor : calls checkDrive to make sure the drive can be used
-if not, stop and report an error
-initializes the drive if appropriate, uses the super
+Constructor: parameters String name, Drive drive
+initializes the drive, uses the super
 constructor to initialize the name, size from the drive, and uuid
 sets vg to null, initially
 
@@ -38,12 +41,8 @@ getter methods for both variables
 
 setter method for vg
 
-boolean checkDrive: checks to make sure the drive exists
-and does not belong to another PV
-returns true if it exists and have not committed yet, false otherwise
-
 String toString: returns the PV, with size, vg if it exists, and uuid
-sort by volume group
+
 
 
 
@@ -52,26 +51,24 @@ ArrayList<PV> pVList: list of physical volumes the volume group has
 ArrayList<LV> lVList: list of logical volumes the volume group has
 int freeSpace: the total free space it has (total PV - total LV)
 
-Constructor: calls checkPV to make sure the PV can be added
-if not, stop and report an error
-adds PV to pVList if appropriate, and uses super
+Constructor: parameters String name, PV pv
+adds PV to pVList, and uses super
 constructor to initialize the name, size from PV, and uuid
 initializes freeSpace to PV size
 sets lVList to an empty list
 
 getter methods for all three variables
 
-void extend: takes in new PV and calls checkPV to check if PV can be added
-if not, stop and report an error
-adds PV to pVList if appropriate
+void extend: parameters PV pv
+takes in new PV and
+adds PV to pVList
+sets PV's VG to this VG
 updates freeSpace
 
-void addLV: takes in new LV and adds it to lVList
+void addLV: parameters LV lv
+takes in new LV and adds it to lVList
+sets LV's VG to this VG
 updates freeSpace
-
-boolean checkPV: checks if inputted PV exists
-and does not belong to another VG
-returns true if it exists and have not committed yet, false otherwise
 
 String toString: returns VG,
 with size and freeSpace, list of PVs and uuid
@@ -81,24 +78,84 @@ with size and freeSpace, list of PVs and uuid
 //Subclass LV
 VG vg: associated volume group of the logical volume
 
-Constructor: calls checkVG to see if VG exists
-if not, stop and report an error
+Constructor: parameters String name, int size, VG vg
 uses super constructor to initialize name, size, uuid
 calls addLV to add LV to the VG
-initializes vg
 
-getter method for vg (?)
-
-boolean checkVG: checks if inputted VG exists
-and if its freeSpace >= LV size
-returns true if it does, false otherwise
+getter and setter method for vg
 
 String toString: returns LV
 with size, associated VG, and uuid
-sorted by VG
+
+
+
 
 //class notRunner
 ArrayList<Drive> drives: list of drives created
 ArrayList<PV> pvs: list of pvs created
 ArrayList<VG> vgs: list of vgs created
+ArrayList<LV> lvs: list of lvs created
 
+void createDrive: parameters String name, int size
+creates a Drive with parameters, if it is not already installed with checkList
+adds Drive to drives
+
+void createPV: parameters String name, Drive drive
+calls checkDrive to make sure the drive can be used
+and checks that name is unique to this PV with checkList
+if not, stop and report an error
+else, creates a PV with parameters
+and adds PV to pvs
+
+void createVG: parameters String name, PV pv
+calls checkPV to make sure the PV can be added with checkList
+and checks that name is unique to this VG
+if not, stop and report an error
+else, creates VG with parameters
+and adds VG to vgs
+
+void extendVG: parameters PV pv
+calls checkPV to check if PV can be added with checkList
+if not, stop and report an error
+else, call extend method with parameters
+
+void createLV: parameters String name, int size, VG vg
+calls checkVG to see if VG can be modified
+and checks that name is unique to this LV with checkList
+if not, stop and report an error
+else, creates LV with parameters
+and adds LV to lvs
+
+void printDrives: prints each Drive information
+
+void printPVs: prints each PV information
+
+void printVG: prints each VG information
+
+void printLV: prints each LV information
+
+boolean checkList: parameters ArrayList list, String name
+checks if objects in list has the same name as name
+returns true if yes, false otherwise
+
+boolean checkDrive: checks to make sure the drive exists in list
+and does not belong to another PV
+returns true if it exists and have not committed yet, false otherwise
+
+boolean checkPV: checks if inputted PV exists
+and does not belong to another VG
+returns true if it exists and have not committed yet, false otherwise
+
+boolean checkVG: checks if inputted VG exists
+and if its freeSpace >= LV size
+returns true if it does, false otherwise
+
+boolean checkLV: checks if inputted LV exists and if its size <= freeSpace of VG
+returns true if it does, false otherwise
+
+//Runner
+-constructs a notRunner instance
+-prints welcome message
+-prompts the user for command
+-for each command, execute corresponding method from notRunner
+-while command is not 'exit', repeat last two steps
