@@ -97,7 +97,9 @@ ArrayList<VG> vgs: list of vgs created
 ArrayList<LV> lvs: list of lvs created
 
 void createDrive: parameters String name, int size
-creates a Drive with parameters, if it is not already installed with checkList
+calls checkList to see if drive with name is already installed
+if so, stop and report an error
+else, creates a Drive with parameters
 adds Drive to drives
 
 void createPV: parameters String name, Drive drive
@@ -108,13 +110,13 @@ else, creates a PV with parameters
 and adds PV to pvs
 
 void createVG: parameters String name, PV pv
-calls checkPV to make sure the PV can be added with checkList
-and checks that name is unique to this VG
+calls checkPV to make sure the PV can be added
+and checks that name is unique to this VG with checkLis
 if not, stop and report an error
 else, creates VG with parameters
 and adds VG to vgs
 
-void extendVG: parameters PV pv
+void extendVG: parameters VG vg PV pv
 calls checkPV to check if PV can be added with checkList
 if not, stop and report an error
 else, call extend method with parameters
@@ -128,30 +130,36 @@ and adds LV to lvs
 
 void printDrives: prints each Drive information
 
-void printPVs: prints each PV information
+void printPVs: prints each PV information sorted by VG
 
 void printVG: prints each VG information
 
-void printLV: prints each LV information
+void printLV: prints each LV information sorted by VG
 
 boolean checkList: parameters ArrayList list, String name
 checks if objects in list has the same name as name
-returns true if yes, false otherwise
+returns true if yes, false otherwise **four versions for each object
 
-boolean checkDrive: checks to make sure the drive exists in list
+boolean checkDrive: parameters Drive drive
+checks to make sure the drive exists in list
 and does not belong to another PV
 returns true if it exists and have not committed yet, false otherwise
 
-boolean checkPV: checks if inputted PV exists
+boolean checkPV: parameters PV pv
+checks if inputted PV exists
 and does not belong to another VG
 returns true if it exists and have not committed yet, false otherwise
 
-boolean checkVG: checks if inputted VG exists
-and if its freeSpace >= LV size
+boolean checkVG: parameters VG vg itn size
+checks if inputted VG exists
+and if its freeSpace >= size
 returns true if it does, false otherwise
 
-boolean checkLV: checks if inputted LV exists and if its size <= freeSpace of VG
+boolean checkLV: parameters LV lv
+checks if inputted LV exists and if its size <= freeSpace of VG
 returns true if it does, false otherwise
+
+void sortByVG: sorts list by vg **two versions for PV and LV
 
 //Runner
 -constructs a notRunner instance
