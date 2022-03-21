@@ -1,0 +1,24 @@
+Objects
+        Drive drive1 = new Drive("SDA1", 30);
+        Drive drive2 = new Drive("SDA2", 30);
+        Drive drive3 = new Drive("SDB1", 30);
+        Drive drive4 = new Drive("SDB2", 30);
+        Drive driveNot = new Drive("SDA1", 40); //Drive name is already taken
+
+        PV pv1 = new PV("PV1", drive1);
+        PV pv2 = new PV("PV2", drive2);
+        PV pv3 = new PV("PV3", drive3);
+        PV pvNot1 = new PV("PV1", drive4); //PV name is already taken
+        PV pvNot2 = new PV("PV4", drive1); //Drive is already taken
+        PV pvNot3 = new PV("PV5", "drive5"); //Drive does not exist
+
+        VG vg1 = new VG("VG1", pv1);
+        VG vg2 = new VG("VG2", pv2);
+        VG vgNot1 = new VG("VG1", pv3); //VG name already exists
+        VG vgNot2 = new VG("VG3", pv1); //PV belongs in a different VG
+        VG vgNot3 = new VG("VG3", pv4); //PV does not exist
+
+        LV lv1 = new LV("LV1", 60, vg1);
+        LV lvNot1 = new LV("LV2", 18000, vg1); //Not enough space
+        LV lvNot2 = new LV("LV1", 40, vg2); //LV name is already taken
+        LV lvNot3 = new LV("LV3", 40, vg3); //VG does not exist

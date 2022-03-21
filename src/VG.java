@@ -9,6 +9,7 @@ public class VG extends Volume{
         super(n, pv.getSize());
         pVList = new ArrayList<PV>();
         pVList.add(pv);
+        pv.setVg(this);
         freeSpace = pv.getSize();
         lVList = new ArrayList<LV>();
     }
@@ -29,7 +30,7 @@ public class VG extends Volume{
         pVList.add(pv);
         pv.setVg(this);
         freeSpace += pv.getSize();
-        super.setSize(getSize() + pv.getSize());
+        setSize(getSize() + pv.getSize());
     }
 
     public void addLV(LV lv) {
@@ -39,7 +40,7 @@ public class VG extends Volume{
 
     public String toString() {
         String str = getName() + ": " + "total:[" + getSize() + "G] available:[" +
-                freeSpace + "G] [";
+                Math.abs(freeSpace) + "G] [";
         for (PV pv : pVList) {
             String name = pv.getName();
             str += name + ",";

@@ -11,10 +11,6 @@ public class LV extends Volume{
         return vg;
     }
 
-    public void setVg(VG vg) {
-        this.vg = vg;
-    }
-
     public String toString() {
         return getName() + ": [" + getSize() + "G] [" + vg.getName() + "] [" + getUuid() + "]";
     }
