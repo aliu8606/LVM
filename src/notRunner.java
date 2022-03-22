@@ -6,6 +6,13 @@ public class notRunner {
     private ArrayList<VG> vgs;
     private ArrayList<LV> lvs;
 
+    public notRunner() {
+        drives = new ArrayList<Drive>();
+        pvs = new ArrayList<PV>();
+        vgs = new ArrayList<VG>();
+        lvs = new ArrayList<LV>();
+    }
+
     public String createDrive(String name, int size) {
         if (!checkDriveList(drives, name)) {
             drives.add(new Drive(name, size));
@@ -156,13 +163,13 @@ public class notRunner {
         return vg.getFreeSpace() >= size;
     }
 
-    public boolean checkLV(LV lv, VG vg) {
+    /*public boolean checkLV(LV lv, VG vg) {
         if (!lvs.contains(lv)) {
             return false;
         }
 
         return vg.getFreeSpace() >= lv.getSize();
-    }
+    }*/
 
     public void sortByVGWithPV(ArrayList<PV> list) {
         for(int i = 0; i < list.size(); i++)
