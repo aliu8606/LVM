@@ -14,7 +14,7 @@ public class notRunner {
     }
 
     public String createDrive(String name, int size) {
-        if (!checkDriveList(drives, name)) {
+        if (!checkList(name, "Drive")) {
             drives.add(new Drive(name, size));
             return "Drive " + name + " installed";
         }
@@ -23,44 +23,80 @@ public class notRunner {
         }
     }
 
-    public String createPV(String name, Drive drive) {
-        if (checkDrive(drive) && !checkPVList(pvs, name)) {
-            pvs.add(new PV(name, drive));
-            return name + " created";
+    public String createPV(String name, String driveName) {
+        Drive drive;
+        for (Drive d : drives) {
+            if (d.getName().equals(driveName)) {
+                drive = d;
+                if (checkDrive(drive) && !checkList(name, "PV")) {
+                    pvs.add(new PV(name, drive));
+                    return name + " created";
+                }
+                else {
+                    break;
+                }
+            }
         }
-        else {
-            return name + " creation failed";
-        }
+
+        return name + " creation failed";
+
     }
 
-    public String createVG(String name, PV pv) {
-        if (checkPV(pv) && !checkVGList(vgs, name)) {
-            vgs.add(new VG(name, pv));
-            return name + " created";
+    public String createVG(String name, String pvName) {
+        PV pv;
+        for (PV p : pvs) {
+            if (p.getName().equals(pvName)) {
+                pv = p;
+                if (checkPV(pv) && !checkList(name, "VG")) {
+                    vgs.add(new VG(name, pv));
+                    return name + " created";
+                }
+            }
         }
-        else {
-            return name + " creation failed";
-        }
+
+        return name + " creation failed";
     }
 
-    public String extendVG(VG vg, PV pv) {
-        if (checkPV(pv)) {
-            vg.extend(pv);
-            return pv.getName() + " added to " + vg.getName();
+    public String extendVG(String vgName, String pvName) {
+        VG vg;
+        for (VG v : vgs) {
+            if (v.getName().equals(vgName)) {
+                vg = v;
+                PV pv;
+                for (PV p : pvs) {
+                    if (p.getName().equals(pvName)) {
+                        pv = p;
+                        if (checkPV(pv)) {
+                            vg.extend(pv);
+                            return pvName + " added to " + vgName;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                }
+            }
         }
-        else {
-            return vg.getName() + " extension failed";
-        }
+
+        return vgName + " extension failed";
     }
 
-    public String createLV(String name, int size, VG vg) {
-        if (checkVG(vg, size) && !checkLVList(lvs, name)) {
-            lvs.add(new LV(name, size, vg));
-            return name + " created";
+    public String createLV(String name, int size, String vgName) {
+        VG vg;
+        for (VG v : vgs) {
+            if (v.getName().equals(vgName)) {
+                vg = v;
+                if (checkVG(vg, size) && !checkList(name, "LV")) {
+                    lvs.add(new LV(name, size, vg));
+                    return name + " created";
+                }
+                else {
+                    break;
+                }
+            }
         }
-        else {
-            return name + " creation failed";
-        }
+
+        return name + " creation failed";
     }
 
     public void printDrives() {
@@ -70,7 +106,7 @@ public class notRunner {
     }
 
     public void printPVs() {
-        sortByVGWithPV(pvs);
+        sortByVG("PV");
         for (PV pv : pvs) {
             System.out.println(pv);
         }
@@ -83,53 +119,49 @@ public class notRunner {
     }
 
     public void printLVs() {
-        sortByVGWithLV(lvs);
+        sortByVG("LV");
         for (LV lv : lvs) {
             System.out.println(lv);
         }
     }
 
-    public boolean checkDriveList(ArrayList<Drive> list, String name) {
-        for (Drive o : list) {
-            if (o.getName().equals(name)) {
-                return true;
+    private boolean checkList(String name, String type) {
+        if (type.equals("Drive")) {
+            for (Drive o : drives) {
+                if (o.getName().equals(name)) {
+                    return true;
+                }
             }
-        }
-        return false;
-    }
-
-    public boolean checkPVList(ArrayList<PV> list, String name) {
-        for (PV o : list) {
-            if (o.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean checkVGList(ArrayList<VG> list, String name) {
-        for (VG o : list) {
-            if (o.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean checkLVList(ArrayList<LV> list, String name) {
-        for (LV o : list) {
-            if (o.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean checkDrive(Drive drive) {
-        if (!drives.contains(drive)) {
             return false;
         }
+        else if (type.equals("PV")) {
+            for (PV o : pvs) {
+                if (o.getName().equals(name)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else if (type.equals("VG")) {
+            for (VG o : vgs) {
+                if (o.getName().equals(name)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else if (type.equals("LV")) {
+            for (LV o : lvs) {
+                if (o.getName().equals(name)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return false;
+    }
 
+    private boolean checkDrive(Drive drive) {
         for (PV pv : pvs) {
             if (pv.getDrive().equals(drive)) {
                 return false;
@@ -139,11 +171,7 @@ public class notRunner {
         return true;
     }
 
-    public boolean checkPV(PV pv) {
-        if (!pvs.contains(pv)) {
-            return false;
-        }
-
+    private boolean checkPV(PV pv) {
         for (VG vg : vgs) {
             for (PV p : vg.getpVList()) {
                 if (p.equals(pv)) {
@@ -155,41 +183,45 @@ public class notRunner {
         return true;
     }
 
-    public boolean checkVG(VG vg, int size) {
-        if (!vgs.contains(vg)) {
-            return false;
-        }
-
+    private boolean checkVG(VG vg, int size) {
         return vg.getFreeSpace() >= size;
     }
 
-    /*public boolean checkLV(LV lv, VG vg) {
-        if (!lvs.contains(lv)) {
-            return false;
+    private void sortByVG(String type) {
+        if (type.equals("PV")) {
+            for (int i = 1; i < pvs.size(); i++) {
+                PV currentPV = pvs.get(i);
+                int j = i - 1;
+                while(j >= 0 && compare(currentPV, pvs.get(j)) < 0) {
+                    pvs.set(j + 1, pvs.get(j));
+                    j--;
+                }
+                pvs.set(j + 1, currentPV);
+            }
+        }
+        if (type.equals("LV")) {
+            for (int i = 1; i < lvs.size(); i++) {
+                LV currentLV = lvs.get(i);
+                int j = i - 1;
+                while(j >= 0 && compare(currentLV, lvs.get(j)) < 0) {
+                    lvs.set(j + 1, lvs.get(j));
+                    j--;
+                }
+                lvs.set(j + 1, currentLV);
+            }
         }
 
-        return vg.getFreeSpace() >= lv.getSize();
-    }*/
-
-    public void sortByVGWithPV(ArrayList<PV> list) {
-        for(int i = 0; i < list.size(); i++)
-        {
-            PV pv = list.get(i);
-            String pvName = pv.getVg().getName();
-            int j;
-            for(j = 0; j < list.size() && list.get(j).getVg().getName().compareTo(pvName)< 0; j++) {}
-            list.add(j,pv);
-        }
     }
 
-    public void sortByVGWithLV(ArrayList<LV> list) {
-        for(int i = 0; i < list.size(); i++)
-        {
-            LV lv = list.get(i);
-            String lvName = lv.getVg().getName();
-            int j;
-            for(j = 0; j < list.size() && list.get(j).getVg().getName().compareTo(lvName)< 0; j++) {}
-            list.add(j,lv);
+    private int compare(PV pv1, PV pv2) {
+        if (pv1.getVg() == null ||  pv2.getVg() == null) {
+            return -1;
         }
+        return pv1.getVg().getName().compareTo(pv2.getVg().getName());
     }
+
+    private int compare(LV lv1, LV lv2) {
+        return lv1.getVg().getName().compareTo(lv2.getVg().getName());
+    }
+
 }

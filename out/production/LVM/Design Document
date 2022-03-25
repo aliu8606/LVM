@@ -96,59 +96,63 @@ ArrayList<PV> pvs: list of pvs created
 ArrayList<VG> vgs: list of vgs created
 ArrayList<LV> lvs: list of lvs created
 
-void createDrive: parameters String name, int size
+String createDrive: parameters String name, int size
 calls checkList to see if drive with name is already installed
 if so, stop and report an error
-else, creates a Drive with parameters
-adds Drive to drives
+else, creates a Drive with parameters, adds this Drive to drives list
+and returns a success message
 
-void createPV: parameters String name, Drive drive
-calls checkDrive to make sure the drive can be used
-and checks that name is unique to this PV with checkList
+String createPV: parameters String name, String driveName
+iterates through list drives to check if a drive with driveName as name exists
+if so, calls checkDrive to make sure the drive can be used and calls checkList to see if name is unique
+if drive can be used, construct a PV with name and that drive
+and adds this PV to pvs list
+and return a success message
 if not, stop and report an error
-else, creates a PV with parameters
-and adds PV to pvs
 
-void createVG: parameters String name, PV pv
-calls checkPV to make sure the PV can be added
-and checks that name is unique to this VG with checkLis
+String createVG: parameters String name, String pvName
+iterates through list pvs to check if a pv with pvName as name exists
+if so, calls checkPV to make sure the PV can be added and calls checkList to see if name is unique
+if PV can be used, construct a VG with name and that PV
+and adds this VG to vgs
+and return a success message
 if not, stop and report an error
-else, creates VG with parameters
-and adds VG to vgs
 
-void extendVG: parameters VG vg PV pv
-calls checkPV to check if PV can be added with checkList
-if not, stop and report an error
-else, call extend method with parameters
+String extendVG: parameters String vgName, String pvName
+iterates through vgs list to check if a VG with name vgName exists
+if so, iterates through pvs list to check if a PV with name pvName exists
+if yes, calls checkPV to check if PV can be added with checkList and calls checkList to see if name is unique
+and call extend method with that VG and that PV
+and return a success message
+otherwise, stop and report an error
 
-void createLV: parameters String name, int size, VG vg
-calls checkVG to see if VG can be modified
-and checks that name is unique to this LV with checkList
-if not, stop and report an error
-else, creates LV with parameters
-and adds LV to lvs
+String createLV: parameters String name, int size, String vgName
+iterates through vgs list to check if a VG with name vgName exists
+if so, calls checkVG to see if VG can be modified and calls checkList to see if name is unique
+if yes, creates LV with parameters and adds LV to lvs
+else, stop and report an error
 
 void printDrives: prints each Drive information
 
-void printPVs: prints each PV information sorted by VG
+void printPVs: creates an equivalent object list to pvs, calls sortByVG to sort pvs,
+and prints each PV information
 
 void printVG: prints each VG information
 
-void printLV: prints each LV information sorted by VG
+void printLV: creates an equivalent object list to lvs, calls sortByVG to sort lvs,
+and prints each LV information
 
-boolean checkList: parameters ArrayList list, String name
-checks if objects in list has the same name as name
-returns true if yes, false otherwise **four versions for each object
+boolean checkList: parameters String name, String type
+iterates through type list to see if a type with name the same as parameter name exists
+returns true if so, false otherwise
 
 boolean checkDrive: parameters Drive drive
-checks to make sure the drive exists in list
-and does not belong to another PV
-returns true if it exists and have not committed yet, false otherwise
+checks to make sure the drive does not belong to another PV
+returns true if it doesn't, false otherwise
 
 boolean checkPV: parameters PV pv
-checks if inputted PV exists
-and does not belong to another VG
-returns true if it exists and have not committed yet, false otherwise
+checks if inputted PV does not belong to another VG
+returns true if it doesn't, false otherwise
 
 boolean checkVG: parameters VG vg itn size
 checks if inputted VG exists
@@ -159,7 +163,8 @@ boolean checkLV: parameters LV lv
 checks if inputted LV exists and if its size <= freeSpace of VG
 returns true if it does, false otherwise
 
-void sortByVG: sorts list by vg **two versions for PV and LV
+void sortByVG: parameters ArrayList<Object> list, String type
+sorts list by VG, type-casted with type
 
 //Runner
 -constructs a notRunner instance
