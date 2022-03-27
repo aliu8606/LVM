@@ -4,14 +4,14 @@ public class Tester {
 
         notRunner run = new notRunner();
 /*
-       //Creating Drives
+        //Creating Drives
         System.out.println(run.createDrive("SDA1", 30));
         System.out.println(run.createDrive("SDA2", 30));
         System.out.println(run.createDrive("SDB1", 30));
         System.out.println(run.createDrive("SDB2", 30));
         System.out.println(run.createDrive("SDA1", 30)); //Drive name is already taken
-*/
-/*      System.out.println();
+
+        System.out.println();
         //Creating PVs
         System.out.println(run.createPV("PV1", "SDA1"));
         System.out.println(run.createPV("PV2", "SDA2"));
@@ -19,24 +19,24 @@ public class Tester {
         System.out.println(run.createPV("PV1", "SDB2")); //PV name is already taken
         System.out.println(run.createPV("PV4", "SDA1")); //Drive belongs to another PV
         System.out.println(run.createPV("PV5", "askdjlasjdla")); //Drive does not exist
-*/
-/*      System.out.println();
+
+        System.out.println();
         //Creating VGS
         System.out.println(run.createVG("VG1", "PV1"));
         System.out.println(run.createVG("VG2", "PV2"));
         System.out.println(run.createVG("VG1", "PV3")); //VG name is already taken
         System.out.println(run.createVG("VG3", "PV1")); //PV belongs to a different VG
         System.out.println(run.createVG("VG4", "akdhsads")); //PV does not exist
-*/
-/*      System.out.println();
+
+        System.out.println();
         //Creating LVS
         System.out.println(run.createLV("LV1", 10, "VG1"));
         System.out.println(run.createLV("LV2", 10, "VG2"));
         System.out.println(run.createLV("LV1", 10, "VG2")); //LV name is already taken
         System.out.println(run.createLV("LV3", 100000, "VG1")); //Not enough space
         System.out.println(run.createLV("LV3", 10, "asdadasa")); //VG does not exist
-*/
-/*      System.out.println();
+
+        System.out.println();
         //Extending VGs
         System.out.println(run.extendVG("VG1", "PV3"));
         System.out.println(run.extendVG("VG2", "PV3")); //PV belongs to a different VG
@@ -84,12 +84,24 @@ public class Tester {
         run.createLV("LVB2", 30, "VGB");
 
         run.createLV("LVA2", 30, "VGA");
-
-
-        //run.printPVs();
-        //run.printDrives();
-        //run.printVGs();
-        //run.printLVs();
 */
+
+        /*
+        run.printPVs();
+        run.printDrives();
+        run.printVGs();
+        run.printLVs();
+        */
+
+
+        //System.out.println(run.saveData());
+        //System.out.println(run.loadData());
+
+        /*
+        run.printPVs();
+        run.printDrives();
+        run.printVGs();
+        run.printLVs();
+        */
     }
 }

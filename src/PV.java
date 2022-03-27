@@ -1,9 +1,17 @@
+import java.util.UUID;
+
 public class PV extends Volume{
     private Drive drive;
     private VG vg;
 
     public PV(String n, Drive d) {
         super(n, d.getSize());
+        drive = d;
+        vg = null;
+    }
+
+    public PV(String n, Drive d, UUID u) {
+        super(n, d.getSize(), u);
         drive = d;
         vg = null;
     }

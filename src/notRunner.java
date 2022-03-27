@@ -1,16 +1,43 @@
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class notRunner {
     private ArrayList<Drive> drives;
     private ArrayList<PV> pvs;
     private ArrayList<VG> vgs;
     private ArrayList<LV> lvs;
+    private SaveData file;
 
     public notRunner() {
         drives = new ArrayList<Drive>();
         pvs = new ArrayList<PV>();
         vgs = new ArrayList<VG>();
         lvs = new ArrayList<LV>();
+        file = new SaveData(this);
+    }
+
+    public ArrayList<Drive> getDrives() {
+        return drives;
+    }
+
+    public ArrayList<PV> getPvs() {
+        return pvs;
+    }
+
+    public ArrayList<VG> getVgs() {
+        return vgs;
+    }
+
+    public ArrayList<LV> getLvs() {
+        return lvs;
+    }
+
+    public String saveData() {
+        return file.save();
+    }
+
+    public String loadData() {
+        return file.load();
     }
 
     public String createDrive(String name, int size) {
@@ -42,6 +69,17 @@ public class notRunner {
 
     }
 
+    public void createPV(String name, String driveName, UUID uuid) {
+        Drive drive;
+        for (Drive d : drives) {
+            if (d.getName().equals(driveName)) {
+                drive = d;
+                pvs.add(new PV(name, drive, uuid));
+                break;
+            }
+        }
+    }
+
     public String createVG(String name, String pvName) {
         PV pv;
         for (PV p : pvs) {
@@ -55,6 +93,16 @@ public class notRunner {
         }
 
         return name + " creation failed";
+    }
+
+    public void createVG(String name, String pvName, UUID uuid) {
+        PV pv;
+        for (PV p : pvs) {
+            if (p.getName().equals(pvName)) {
+                pv = p;
+                vgs.add(new VG(name, pv, uuid));
+            }
+        }
     }
 
     public String extendVG(String vgName, String pvName) {
@@ -97,6 +145,16 @@ public class notRunner {
         }
 
         return name + " creation failed";
+    }
+
+    public void createLV(String name, int size, String vgName, UUID uuid) {
+        VG vg;
+        for (VG v : vgs) {
+            if (v.getName().equals(vgName)) {
+                vg = v;
+                lvs.add(new LV(name, size, vg, uuid));
+            }
+        }
     }
 
     public void printDrives() {
@@ -167,7 +225,6 @@ public class notRunner {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -179,7 +236,6 @@ public class notRunner {
                 }
             }
         }
-
         return true;
     }
 

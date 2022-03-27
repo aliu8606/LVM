@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class VG extends Volume{
     private ArrayList<PV> pVList;
@@ -14,12 +15,17 @@ public class VG extends Volume{
         lVList = new ArrayList<LV>();
     }
 
-    public ArrayList<PV> getpVList() {
-        return pVList;
+    public VG(String n, PV pv, UUID u) {
+        super(n, pv.getSize(), u);
+        pVList = new ArrayList<PV>();
+        pVList.add(pv);
+        pv.setVg(this);
+        freeSpace = pv.getSize();
+        lVList = new ArrayList<LV>();
     }
 
-    public ArrayList<LV> getlVList() {
-        return lVList;
+    public ArrayList<PV> getpVList() {
+        return pVList;
     }
 
     public int getFreeSpace() {
@@ -41,6 +47,7 @@ public class VG extends Volume{
     public String toString() {
         String str = getName() + ": " + "total:[" + getSize() + "G] available:[" +
                 Math.abs(freeSpace) + "G] [";
+
         for (PV pv : pVList) {
             String name = pv.getName();
             str += name + ",";

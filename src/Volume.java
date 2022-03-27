@@ -1,4 +1,5 @@
 import java.util.UUID;
+
 public class Volume {
     private String name;
     private int size;
@@ -8,6 +9,12 @@ public class Volume {
         name = n;
         size = s;
         uuid = generateUUID();
+    }
+
+    public Volume(String n, int s, UUID u) {
+        name = n;
+        size = s;
+        uuid = u;
     }
 
     public String getName() {
