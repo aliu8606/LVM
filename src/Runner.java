@@ -63,7 +63,9 @@ public class Runner {
                 String lvNextStr = lvStr.substring(lvStr.indexOf(" ") + 1);
                 int lvSize = Integer.parseInt(lvNextStr.substring(0,
                         lvNextStr.indexOf("G")));
-                String vgFor = lvStr.substring(lvNextStr.indexOf(" ") + 1);
+                String vgFor = lvNextStr.substring(lvNextStr.indexOf("G") + 2);
+
+                System.out.println(lvName + " " + lvSize + " " + vgFor);
 
                 System.out.println(ITALICS + run.createLV(lvName, lvSize, vgFor) + REGULAR);
             }
